@@ -1,0 +1,67 @@
+.gradle
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android specific files
+*.iml
+.local/
+.idea/
+.navigation/
+captures/
+*.hprof
+
+# Built application files
+*.apk
+*.ap_
+*.aab
+output.json
+
+# Gradle files
+.gradle/
+build/
+**/build/
+**/captures/
+**/generated/
+
+# Dependency directories
+**/bin/
+**/gen/
+**/.gradle/
+**/.idea/
+
+# Keystore files (avoid committing sensitive keys)
+*.jks
+*.keystore
+
+# Local configuration files
+/local.properties
+*.log
+*.swp
+*.swo
+*.swn
+
+# OS specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Coverage reports
+*.ec
+*.exec
+coverage/
+coverage.html
+
+# Miscellaneous
+*.bak
+*.orig
+*.rej

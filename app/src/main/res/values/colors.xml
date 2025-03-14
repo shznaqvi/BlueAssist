@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1565C0</color> <!-- Deep Blue -->
+    <color name="colorPrimaryLight">#1E88E5</color> <!-- Lighter Blue -->
+    <color name="colorPrimaryDark">#0D47A1</color> <!-- Darker Blue -->
+    <color name="colorAccent">#FF5252</color> <!-- Emergency Red -->
+    <color name="colorAccentLight">#FF867F</color> <!-- Light Emergency Red -->
+
+    <color name="colorPrimaryOverlay">#7f1565C0</color>
+    <color name="colorPrimaryLightOverlay">#7f1E88E5</color>
+    <color name="colorPrimaryDarkOverlay">#7f0D47A1</color>
+    <color name="colorAccentOverlay">#7fFF5252</color>
+    <color name="colorAccentLightOverlay">#7fFF867F</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+<color name="gray">#6d757575</color>
+<color name="grayDark">#424242</color>
+<color name="grayLight">#d6d6d6</color>
+<color name="grayLightd6">#d6d6d6</color>
+<color name="greenLight">#d600ef00</color>
+<color name="fuchsia">#d6ef00ef</color>
+<color name="redLight">#d6ef0000</color>
+<color name="orangeWarn">#d6FFA500</color>
+<color name="green">#009900</color>
+<color name="redDark">#990000</color>
+<color name="orangeOverlay">#7fFFEFD5</color>
+<color name="greenOverlay">#7f009900</color>
+<color name="blackOverlay">#7f000000</color>
+<color name="whiteOverlay">#7fffffff</color>
+<color name="redOverlay">#7fef7f7f</color>
+<color name="Pink">#FF80AB</color>
+<color name="lightPink">#F8BBD0</color>
+<color name="colorSecondary">#00617d</color>
+<color name="gray_material">#727272</color>
+<color name="girlPink">#FF80AB</color>
+
+
+
+</resources>

@@ -1,0 +1,55 @@
+{
+  "Adult_Cardiac_Arrest": {
+    "steps": [
+      {
+        "name": "Start CPR",
+        "duration": 12000,
+        "message": "Start CPR. Give oxygen and attach monitor.",
+        "instructions": "• Give oxygen \n• Attach monitor/defibrillator ",
+        "next_step": "Attach Monitor"
+      },
+      {
+        "name": "Attach Monitor",
+        "duration": 12000,
+        "message": "Attach monitor and check rhythm.",
+        "next_step": "Check Rhythm"
+      },
+      {
+        "name": "Check Rhythm",
+        "duration": 12000,
+        "message": "Check rhythm and determine shockability.",
+        "next_step": "Shock If Needed"
+      },
+      {
+        "name": "Shock If Needed",
+        "duration": 12000,
+        "message": "If shockable, deliver shock. Otherwise, continue CPR.",
+        "next_step": "Administer Epinephrine"
+      },
+      {
+        "name": "Administer Epinephrine",
+        "duration": 12000,
+        "message": "Administer Epinephrine and reassess rhythm.",
+        "next_step": "Reassess Rhythm"
+      },
+      {
+        "name": "Reassess Rhythm",
+        "duration": 12000,
+        "message": "Reassess rhythm and consider shock if needed.",
+        "next_step": "Administer Amiodarone"
+      },
+      {
+        "name": "Administer Amiodarone",
+        "duration": 12000,
+        "message": "If shockable, administer Amiodarone.",
+        "next_step": "Continue CPR"
+      },
+      {
+        "name": "Continue CPR",
+        "duration": 120000,
+        "message": "Continue CPR and reassess after 2 minutes.",
+        "next_step": "Check Rhythm"
+      }
+    ]
+  }
+}
