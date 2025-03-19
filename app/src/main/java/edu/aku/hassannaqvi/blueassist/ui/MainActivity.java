@@ -1,26 +1,36 @@
+// MainActivity.java
 package edu.aku.hassannaqvi.blueassist.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import edu.aku.hassannaqvi.blueassist.R;
 import edu.aku.hassannaqvi.blueassist.model.ACLSProtocol;
 import edu.aku.hassannaqvi.blueassist.model.ACLSStep;
+import edu.aku.hassannaqvi.blueassist.model.ACLSSubstep;
+import edu.aku.hassannaqvi.blueassist.utils.ACLSFlowController;
 import edu.aku.hassannaqvi.blueassist.utils.ProtocolLoader;
 import edu.aku.hassannaqvi.blueassist.utils.TTSManager;
-import edu.aku.hassannaqvi.blueassist.utils.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
-    private ACLSProtocol currentProtocol;
+    private TextView stepNameTextView;
+    private TextView stepDescriptionTextView;
+    private TextView stepDurationTextView;
+    private ProgressBar progressBar;
+    private Button actionButton;
+    private Button yesButton;
+    private Button noButton;
+    private LinearLayout yesNoButtons;
+
+    private ACLSFlowController flowController;
     private ProtocolLoader protocolLoader;
     private TTSManager ttsManager;
-    private TimerManager timerManager;
-    private TextView statusText;
-    private TextView instructionsText;
-    private ProgressBar progressBar;
-    private Button nextStepButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,46 +38,78 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ttsManager = new TTSManager(this);
+
+
+        stepNameTextView = findViewById(R.id.stepName);
+        stepDescriptionTextView = findViewById(R.id.stepDescription);
+        stepDurationTextView = findViewById(R.id.stepDuration);
+        progressBar = findViewById(R.id.progressBar);
+        actionButton = findViewById(R.id.actionButton);
+        yesButton = findViewById(R.id.yesButton);
+        noButton = findViewById(R.id.noButton);
+        yesNoButtons = findViewById(R.id.yesNoButtons);
+
         protocolLoader = new ProtocolLoader(this);
-        currentProtocol = protocolLoader.getProtocol("Adult_Cardiac_Arrest");
+        ACLSProtocol currentProtocol = protocolLoader.getProtocol("Adult_Cardiac_Arrest");
 
-        statusText = findViewById(R.id.status_text);
-        instructionsText = findViewById(R.id.instructions_text);
-        progressBar = findViewById(R.id.progress_bar);
-        nextStepButton = findViewById(R.id.next_step_button);
 
-        updateUI();
+        // Initialize flowController with the appropriate protocol
+        flowController = new ACLSFlowController(currentProtocol, this);
+        flowController.startProtocol();
 
-        nextStepButton.setOnClickListener(v -> {
-            if (currentProtocol.nextStep()) {
-                updateUI();
-            }
-        });
+        actionButton.setOnClickListener(v -> flowController.moveToNextStep());
+
+        yesButton.setOnClickListener(v -> flowController.moveToNextStep(true));
+        noButton.setOnClickListener(v -> flowController.moveToNextStep(false));
     }
 
-    private void updateUI() {
-        ACLSStep step = currentProtocol.getCurrentStep();
-        statusText.setText(step.getName());
-        instructionsText.setText(step.getInstruction());
-        ttsManager.speak(step.getMessage());
+    public void updateUI(ACLSStep step) {
+        stepNameTextView.setText(step.getName());
+        stepDescriptionTextView.setText(step.getTtsMessage());
+        stepDurationTextView.setText(String.valueOf(step.getDuration()));
+        yesNoButtons.setVisibility(View.GONE);
+        actionButton.setVisibility(View.VISIBLE);
+        ttsManager.speak(step.getTtsMessage());
 
-        // Start a new timer for the step duration
-        if (timerManager != null) {
-            timerManager.cancel();
+        if (step.getDuration()>0) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setMax(step.getDuration()*60);
+
+
+        } else {
+            progressBar.setVisibility(View.GONE);
         }
 
-        timerManager = new TimerManager(step.getDuration(), 1000, progressBar, new TimerManager.TimerListener() {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                // UI updates already handled in TimerManager
-            }
+/*        if (step.hasDecisionBranch()) {
+            yesNoButtons.setVisibility(View.VISIBLE);
+            actionButton.setVisibility(View.GONE);
+        } else {
+            yesNoButtons.setVisibility(View.GONE);
+            actionButton.setVisibility(View.VISIBLE);
+        }*/
+    }
 
-            @Override
-            public void onFinish() {
-                statusText.setText("Step completed!");
-            }
-        });
+    public void updateUI(ACLSSubstep subStep) {
+        stepNameTextView.setText("Is Rhythm Shockable?");
+        stepDescriptionTextView.setText(subStep.getQuestion());
 
-        timerManager.start();
+        yesNoButtons.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        actionButton.setVisibility(View.GONE);
+
+    }
+
+    public void showDecisionButtons(ACLSFlowController controller) {
+        yesNoButtons.setVisibility(View.VISIBLE);
+        actionButton.setVisibility(View.GONE);
+    }
+
+    public void updateProgressBar(int durationInSeconds, int secondsRemaining) {
+        progressBar.setMax(durationInSeconds);
+        progressBar.setProgress(durationInSeconds - secondsRemaining);
+    }
+
+    public void updateActionButtonText(String button_text) {
+        actionButton.setText(button_text);
     }
 }

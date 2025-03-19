@@ -2,53 +2,149 @@
   "Adult_Cardiac_Arrest": {
     "steps": [
       {
+        "id": 1,
         "name": "Start CPR",
-        "duration": 12000,
-        "message": "Start CPR. Give oxygen and attach monitor.",
-        "instructions": "• Give oxygen \n• Attach monitor/defibrillator ",
-        "next_step": "Attach Monitor"
+        "type": "Initial Step with Decision",
+        "timer": 0,
+        "done_button": false,
+        "decision_sub_step": {
+          "question": "Is Rhythm Shockable?",
+          "yes": 2,
+          "no": 9
+        },
+        "tts_message": "Start CPR. Give Oxygen. Attach monitor defibrillator."
       },
       {
-        "name": "Attach Monitor",
-        "duration": 12000,
-        "message": "Attach monitor and check rhythm.",
-        "next_step": "Check Rhythm"
+        "id": 2,
+        "name": "VF/pVT",
+        "type": "Continuous Timer Step",
+        "timer": -1,
+        "done_button": true,
+        "next": 3,
+        "tts_message": "VF or pVT detected. Proceeding to next step."
       },
       {
-        "name": "Check Rhythm",
-        "duration": 12000,
-        "message": "Check rhythm and determine shockability.",
-        "next_step": "Shock If Needed"
+        "id": 3,
+        "name": "Deliver Shock 1",
+        "type": "Merged with Step 2",
+        "timer": -1,
+        "done_button": true,
+        "next": 4,
+        "tts_message": "Deliver Shock 1. Press done when complete."
       },
       {
-        "name": "Shock If Needed",
-        "duration": 12000,
-        "message": "If shockable, deliver shock. Otherwise, continue CPR.",
-        "next_step": "Administer Epinephrine"
+        "id": 4,
+        "name": "CPR + IV/IO Access",
+        "type": "Timed Step + Overtime + Decision",
+        "timer": 2,
+        "overtime_timer": "no_limit",
+        "done_button": true,
+        "decision_sub_step": {
+          "question": "Is Rhythm Shockable?",
+          "yes": 5,
+          "no": 12
+        },
+        "tts_message": "Start CPR for 2 minutes. Establish IV or IO Access."
       },
       {
-        "name": "Administer Epinephrine",
-        "duration": 12000,
-        "message": "Administer Epinephrine and reassess rhythm.",
-        "next_step": "Reassess Rhythm"
+        "id": 5,
+        "name": "Deliver Shock 2",
+        "type": "Continuous Timer Step",
+        "timer":  -1,
+        "done_button": true,
+        "next": 6,
+        "tts_message": "Deliver Shock 2. Press done when complete."
       },
       {
-        "name": "Reassess Rhythm",
-        "duration": 12000,
-        "message": "Reassess rhythm and consider shock if needed.",
-        "next_step": "Administer Amiodarone"
+        "id": 6,
+        "name": "CPR + Epinephrine",
+        "type": "Timed Step + Overtime + Decision",
+        "timer": 2,
+        "overtime_timer": "no_limit",
+        "done_button": true,
+        "decision_sub_step": {
+          "question": "Is Rhythm Shockable?",
+          "yes": 7,
+          "no": 12
+        },
+        "tts_message": "Start CPR for 2 minutes. Administer Epinephrine every 3-5 minutes. Consider advanced airway and capnography."
       },
       {
-        "name": "Administer Amiodarone",
-        "duration": 12000,
-        "message": "If shockable, administer Amiodarone.",
-        "next_step": "Continue CPR"
+        "id": 7,
+        "name": "Deliver Shock 3",
+        "type": "Continuous Timer Step",
+        "timer": -1,
+        "done_button": true,
+        "next": 8,
+        "tts_message": "Deliver Shock 3. Press done when complete."
       },
       {
-        "name": "Continue CPR",
-        "duration": 120000,
-        "message": "Continue CPR and reassess after 2 minutes.",
-        "next_step": "Check Rhythm"
+        "id": 8,
+        "name": "CPR + Amiodarone or Lidocaine",
+        "type": "Timed Step + Overtime",
+        "timer": 2,
+        "overtime_timer": "no_limit",
+        "done_button": true,
+        "next": 12,
+        "tts_message": "Start CPR for 2 minutes. Administer Amiodarone or Lidocaine. Treat reversible causes."
+      },
+      {
+        "id": 9,
+        "name": "Asystole/PEA",
+        "type": "Continuous Timer Step",
+        "timer": -1,
+        "done_button": true,
+        "next": 10,
+        "tts_message": "Asystole or PEA detected. Proceeding to next step."
+      },
+      {
+        "id": 10,
+        "name": "CPR + IV/IO Access (PEA)",
+        "type": "Timed Step + Overtime + Decision",
+        "timer": 2,
+        "overtime_timer": "no_limit",
+        "done_button": true,
+        "decision_sub_step": {
+          "question": "Is Rhythm Shockable?",
+          "yes": 5,
+          "no": 11
+        },
+        "tts_message": "Start CPR for 2 minutes. Establish IV or IO Access. Administer Epinephrine every 3-5 minutes. Consider advanced airway and capnography."
+      },
+      {
+        "id": 11,
+        "name": "CPR + Treat Reversible Causes",
+        "type": "Timed Step + Overtime + Decision",
+        "timer": 2,
+        "overtime_timer": "no_limit",
+        "done_button": true,
+        "decision_sub_step": {
+          "question": "Is Rhythm Shockable?",
+          "yes": 5,
+          "no": 12
+        },
+        "tts_message": "Start CPR for 2 minutes. Treat reversible causes."
+      },
+      {
+        "id": 12,
+        "name": "ROSC Check",
+        "type": "Initial Step with Decision",
+        "timer": 0,
+        "done_button": false,
+        "decision_sub_step": {
+          "question": "Is ROSC Achieved?",
+          "yes": 13,
+          "no": 10
+        },
+        "tts_message": "Check for Return of Spontaneous Circulation (ROSC)."
+      },
+      {
+        "id": 13,
+        "name": "Post-Cardiac Arrest Care",
+        "type": "Final Step",
+        "timer": 0,
+        "done_button": false,
+        "tts_message": "Begin Post-Cardiac Arrest Care."
       }
     ]
   }

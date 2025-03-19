@@ -1,55 +1,90 @@
 package edu.aku.hassannaqvi.blueassist.model;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 public class ACLSStep {
-    private String next_step;
-    private String name;
-    private String message;
-    private String instruction;
-    private long duration;
+    private static final String TAG = "ACLSStep";
 
-    public ACLSStep(String name, String message, long duration) {
-        this.name = name;
-        this.message = message;
-        this.duration = duration;
+    private final int id;
+    private final String name;
+    private final String type;
+    private final int duration;
+    private final boolean doneButton;
+    private final String ttsMessage;
+    private final int overtimeDuration;
+    private final String nextStep;
+    private final ACLSSubstep substep;
+
+    public ACLSStep(JSONObject jsonObject) {
+        this.id = jsonObject.optInt("id", -1);
+        this.name = jsonObject.optString("name", "Unknown Step");
+        this.type = jsonObject.optString("type", "Unknown Type");
+        this.duration = jsonObject.optInt("timer", 0);
+        this.doneButton = jsonObject.optBoolean("done_button", false);
+        this.ttsMessage = jsonObject.optString("tts_message", "");
+        this.overtimeDuration = jsonObject.optString("overtime_timer", "none").equals("no_limit") ? -1 : jsonObject.optInt("overtime_timer", 0);
+        this.nextStep = jsonObject.optString("next", null);
+
+        // Handle substep parsing
+        JSONObject substepObj = jsonObject.optJSONObject("decision_sub_step");
+        if (substepObj != null) {
+            this.substep = new ACLSSubstep(substepObj);
+        } else {
+            this.substep = null;
+            Log.w(TAG, "No substep found for step: " + this.name);
+        }
+    }
+
+    // Getters
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getMessage() {
-        return message;
+    public String getType() {
+        return type;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
+
+    public boolean hasDoneButton() {
+        return doneButton;
+    }
+
+    public String getTtsMessage() {
+        return ttsMessage;
+    }
+
+    public int getOvertimeDuration() {
+        return overtimeDuration;
+    }
+
     public String getNextStep() {
-        return next_step;
+        return nextStep;
     }
 
-    public void setNextStep(String next_step) {
-        this.next_step = next_step;
+    public ACLSSubstep getSubstep() {
+        return substep;
     }
 
-    public String getInstruction() {
-        return instruction;
+    // Check if step has decision-based branching
+    public boolean hasDecisionBranch() {
+        return substep != null && (substep.getOptionYes() != null || substep.getOptionNo() != null);
     }
 
-    public void setInstruction(String instruction) {
-        this.instruction = instruction;
-    }
-
-    // If you're loading steps from JSON, add a constructor
-    public ACLSStep(JSONObject jsonObject) {
-        this.name = jsonObject.optString("name", "Unknown Step");
-        this.message = jsonObject.optString("message", "");
-        this.instruction = jsonObject.optString("instructions", null);
-        this.duration = jsonObject.optLong("duration", 0);
-        this.next_step = jsonObject.optString("next_step", null);
-
+    // Determine the next step based on user response
+    public String getNextStepBasedOnResponse(boolean isShockable) {
+        if (hasDecisionBranch()) {
+            return isShockable ? substep.getOptionYes() : substep.getOptionNo();
+        }
+        return nextStep;
     }
 }

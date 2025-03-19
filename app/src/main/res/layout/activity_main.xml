@@ -1,44 +1,98 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp"
-    android:background="@color/colorPrimaryLight"> <!-- Apply Primary Light Color -->
+    android:background="@color/colorPrimaryLight">
 
+    <!-- Step Title -->
     <TextView
-        android:id="@+id/status_text"
+        android:id="@+id/stepName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Press Next to Start ACLS"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:text="Step Name"
+        android:textSize="22sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="10dp" />
 
+    <!-- Step Description -->
+    <TextView
+        android:id="@+id/stepDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Step Description"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Step Duration -->
+    <TextView
+        android:id="@+id/stepDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Step Duration"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Progress Bar -->
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progressBar"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="100"
         android:progress="100"
-        android:visibility="visible"
-        android:progressDrawable="@drawable/progress_bar_style"/>
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:progressDrawable="@drawable/progress_bar_style"
+        android:layout_marginBottom="10dp"/>
 
-    <TextView
-        android:id="@+id/instructions_text"
+    <!-- Yes/No Buttons for Decision -->
+    <LinearLayout
+        android:id="@+id/yesNoButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Press Next to Start ACLS"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        tools:visibility="visible"
+        android:visibility="gone">
 
+        <Button
+            android:id="@+id/yesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YES"
+            android:textSize="18sp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/noButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO"
+            android:textSize="18sp"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/colorError"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- Next Step Button -->
     <Button
-        android:id="@+id/next_step_button"
+        android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next Step"
+        android:text="Start"
+        android:textSize="18sp"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorAccent"
         android:textColor="@android:color/white"/>
-
 </LinearLayout>
