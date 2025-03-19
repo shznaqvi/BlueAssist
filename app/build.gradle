@@ -1,8 +1,21 @@
+import java.util.Properties
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
 }
+
+// Load version from version.properties
+def versionFile = file('version.properties')
+def properties = new Properties()
+properties.load(new FileInputStream(versionFile))
+
+def currentVersion = properties['version']
+def versionParts = currentVersion.split('\\.')
+def major = versionParts[0].toInteger()
+def minor = versionParts[1].toInteger()
+def patch = versionParts[2].toInteger()
 
 android {
     namespace 'edu.aku.hassannaqvi.blueassist'
@@ -13,7 +26,7 @@ android {
         minSdk 29
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        versionName currentVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,6 +42,32 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+
+task incrementVersion {
+    doLast {
+        patch += 1
+        def newVersion = "${major}.${minor}.${patch}"
+        properties['version'] = newVersion
+        properties.store(new FileOutputStream(versionFile), null)
+        println "Incremented version to $newVersion"
+
+        // Commit changes and tag the commit with the new version
+        exec {
+            commandLine 'git', 'add', 'version.properties'
+        }
+        exec {
+            commandLine 'git', 'commit', '-m', "Increment version to $newVersion"
+        }
+        exec {
+            commandLine 'git', 'tag', "v$newVersion"
+        }
+        exec {
+            commandLine 'git', 'push', 'origin', 'main', '--tags'
+        }
+    }
+}
+
+preBuild.dependsOn incrementVersion
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
